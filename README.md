@@ -11,26 +11,26 @@ a waterfall plugin
   import Waterfall from 'react-native-waterfall'
   ...
   <Waterfall
-    numberOfColumns = {2}
-    showUpDistance = {100}
-    onEndReachedThreshold={1000}
-    onEndReached={this.loadMore}
-    renderItem={this.renderItem}
+    numberOfColumns       ={ 2 }
+    expansionOfScope      ={ 100 }
+    onEndReachedThreshold ={ 1000 }
+    onEndReached          ={ this.loadMore }
+    renderItem            ={ this.renderItem }
+	onItemShowUp          ={ this.onItemShowUp }
 ```
 
-## Props
+## props
 		
-	| name | type | description |
-	|:----:|:----:|:-----------:|
-	| numberOfColumns         | the number of columns in the waterfall, default value is 3.|
-	|-------------------------------------------------------------------------------------|
-	| showUpDistance          | out of waterfall displa.                                   |
-	|-------------------------------------------------------------------------------------|
-	| onEndReachedThreshold   | just like VirtualizedList or ListView.                     |
-	|-------------------------------------------------------------------------------------|
-	|  onEndReached           | just like VirtualizedList or ListView.                     |
-  	|-------------------------------------------------------------------------------------|
-	|any props of ScrollView  |                                                            |
+name | type | description 
+-----|------|-------------
+numberOfColumns       | Integer  | the number of columns in the waterfall, default value is 3.
+expansionOfScope      | Number   | The distance from the boundary when item starts to render, default value is 0,
+onEndReachedThreshold | Number   | Just like ListView.
+onEndReached          | Function | Just like ListView.
+onItemShowUp          | Function | This function will be called when the itemView enters the scope.
+renderItem            | Function | (itemData,itemIdx,itemContainer)=>renderable 
+
+and any props of ScrollView
 
 # react-native-waterfall
 瀑布流组件
@@ -40,13 +40,28 @@ a waterfall plugin
 - 需要刷新时，改变props.data的引用。
 - 需要往下加更多item时，在原有的props.data后面加上新数据就行
 
-## Props
-- any props of ScrollView
+## 使用
+```jsx
+  import Waterfall from 'react-native-waterfall'
+  ...
+  <Waterfall
+    numberOfColumns       ={ 2 }
+    expansionOfScope      ={ 100 }
+    onEndReachedThreshold ={ 1000 }
+    onEndReached          ={ this.loadMore }
+    renderItem            ={ this.renderItem }
+	onItemShowUp          ={ this.onItemShowUp }
+```
 
-- numberOfColumns: 瀑布流分成几列，默认3列。
-  
-- showUpDistance: 距离瀑布流的显示范围多远时，开始渲染一个item。
+## props
 
-- onEndReachedThreshold: 参考VirtualizedList or ListView。
-  
-- onEndReached: 参考VirtualizedList or ListView。
+name | type | description 
+-----|------|-------------
+numberOfColumns       | Integer  | 瀑布流分成几列，默认3列。
+expansionOfScope      | Number   | item距离显示范围边界多远时开始渲染，默认值为0。
+onEndReachedThreshold | Number   | 参考ListView。
+onEndReached          | Function | 参考ListView。
+onItemShowUp          | Function | item开始渲染会调用此函数。
+renderItem            | Function | (itemData,itemIdx,itemContainer)=>renderable 
+
+以及ScrollView组件支持的props
