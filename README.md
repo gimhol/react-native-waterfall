@@ -16,7 +16,6 @@ a waterfall plugin
     onEndReachedThreshold ={ 1000 }
     onEndReached          ={ this.loadMore }
     renderItem            ={ this.renderItem }
-	onItemShowUp          ={ this.onItemShowUp }
 ```
 
 ## props
@@ -27,7 +26,6 @@ numberOfColumns       | Integer  | the number of columns in the waterfall, defau
 expansionOfScope      | Number   | The distance from the boundary when item starts to render, default value is 0,
 onEndReachedThreshold | Number   | Just like ListView.
 onEndReached          | Function | Just like ListView.
-onItemShowUp          | Function | This function will be called when the itemView enters the scope.
 renderItem            | Function | (itemData,itemIdx,itemContainer)=>renderable 
 
 and any props of ScrollView
@@ -50,7 +48,6 @@ and any props of ScrollView
     onEndReachedThreshold ={ 1000 }
     onEndReached          ={ this.loadMore }
     renderItem            ={ this.renderItem }
-	onItemShowUp          ={ this.onItemShowUp }
 ```
 
 ## props
@@ -61,7 +58,6 @@ numberOfColumns       | Integer  | 瀑布流分成几列，默认3列。
 expansionOfScope      | Number   | item距离显示范围边界多远时开始渲染，默认值为0。
 onEndReachedThreshold | Number   | 参考ListView。
 onEndReached          | Function | 参考ListView。
-onItemShowUp          | Function | item开始渲染会调用此函数。
 renderItem            | Function | (itemData,itemIdx,itemContainer)=>renderable 
 
 以及ScrollView组件支持的props
