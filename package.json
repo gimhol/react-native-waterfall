@@ -1,0 +1,23 @@
+{
+  "name": "react-native-waterfall",
+  "version": "0.0.1",
+  "description": "a waterfall plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gimhol/react-native-waterfall.git"
+  },
+  "keywords": [
+    "waterfall",
+    "react-native"
+  ],
+  "author": "gimholg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gimhol/react-native-waterfall/issues"
+  },
+  "homepage": "https://github.com/gimhol/react-native-waterfall#readme"
+}
