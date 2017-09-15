@@ -6,7 +6,12 @@ a waterfall plugin
 - When you need to refresh all items, you should change the reference of the data props.data.
 - When you need to add more items, append items' datas to original props.data.
 
-## How to use
+## Install
+```
+npm install react-native-waterfall --save
+```
+
+## Usage
 ```jsx
   import Waterfall from 'react-native-waterfall'
   ...
@@ -18,7 +23,7 @@ a waterfall plugin
     renderItem            ={ this.renderItem }
 ```
 
-## props
+## Props
 		
 name | type | description 
 -----|------|-------------
