@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { Animated, View } from 'react-native';
 export default class WaterfallItemView extends Component{
   constructor(props){
     super(props);
@@ -7,11 +7,15 @@ export default class WaterfallItemView extends Component{
     this.height = 0;
     this.width = props.parent._getItemWidth();
     this.rtime = 0;
+    this.state = {
+      opacity: new Animated.Value(0)
+    }
   }
   componentWillUnmount(){}
   componentWillMount(){}
   componentWillReceiveProps(nextProps){
     if(nextProps.item !== this.props.item){
+      this.state.opacity.setValue(0)
       this.rtime = (this.rtime+1)%2;
       this.forceUpdate();
     }
@@ -22,15 +26,24 @@ export default class WaterfallItemView extends Component{
   componentDidUpdate(){}
   hideIt(){
     if( !this.hidden ){
+      this.state.opacity.setValue(0)
       this.hidden = true;
       this.forceUpdate();
     }
   }
   showIt(){
     if( this.hidden ){
+      this.showUp()
       this.hidden = false;
       this.forceUpdate();
     }
+  }
+  showUp(){
+    Animated.timing(
+      this.state.opacity,{
+        toValue:1,
+        useNativeDriver: true,
+      }).start()
   }
   _renderContent(){
     var {item, idx, renderContent, parent} = this.props;
@@ -53,21 +66,30 @@ export default class WaterfallItemView extends Component{
   }
   getTop(){ return this.top; }
   getFoot(){ return this.top + this.height; }
-  setOpacity(opacity){
-    this.setNativeProps({style:{ opacity }});
-  }
   render(){
     var style = [
       this.props.style,
-      { paddingBottom: this.rtime }
+      {
+        paddingBottom: this.rtime,
+
+        opacity: this.state.opacity,
+        transform: [
+          {
+            scale: this.state.opacity.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0.8, 1],
+            })
+          }
+        ],
+      }
     ];
     return (
-      <View ref={'root'} {...this.props} style={style} onLayout={this._onLayout}>
+      <Animated.View ref={'root'} {...this.props} style={style} onLayout={this._onLayout}>
         {  this.hidden?
             <View style={{height: this.height}}/>
             :this._renderContent()
         }
-      </View>
+      </Animated.View>
     );
   }
 }

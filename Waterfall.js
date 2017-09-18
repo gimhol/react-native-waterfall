@@ -69,6 +69,13 @@ export default class Waterfall extends Component{
 
     }
   }
+  shouldComponentUpdate(nextProps){
+    var { data } = nextProps;
+    if( data !== this.props.data )
+      return true
+
+    return false
+  }
   componentDidUpdate(lastProps,lastState){
     //datas have been refresh and all items have been removed.
     //add items again.
@@ -77,15 +84,6 @@ export default class Waterfall extends Component{
       this.forceUpdate()
       this._controlItemVisibility(0)
     }
-  }
-
-  doSthWhenPlacingOk(func){
-    //if( !this.placing ){
-      func();
-    // }else{
-    //   this.jobAfterPlacing = func;
-    //   console.log('waiting...')
-    // }
   }
   _resetVisibleRange(){
     this.visibleRange.start = 0;
@@ -141,9 +139,9 @@ export default class Waterfall extends Component{
     var { renderItem, numberOfColumns } = this.props;
     var ref = (ref)=>{ this._refItem(ref,idx) };
     var initStyle = {
-      opacity: 0,
+      //opacity: 0,
       position:'absolute',
-      width:this._getItemWidth(),
+      width: this._getItemWidth(),
     };
     return (
       <ItemView
@@ -158,7 +156,6 @@ export default class Waterfall extends Component{
   }
   _refItem = (ref,idx)=>{
     this.itemRefs[idx] = ref;
-    //console.log('ref_'+idx+' '+typeof ref)
   }
 
   placeItem(itemRef){
@@ -167,7 +164,7 @@ export default class Waterfall extends Component{
       var top = minCol*this._getItemWidth();
       var left = this.colHeights[minCol];
       itemRef.setPosition(top,left);
-      itemRef.setOpacity(1);
+      itemRef.showUp();
       this.colHeights[minCol] += itemRef.height;
       //重新设置内部容器高度
       this.container.setNativeProps({
@@ -182,7 +179,11 @@ export default class Waterfall extends Component{
         this.jobAfterPlacing = null;
       }
     }
-    console.log('_onLayout_'+itemRef.props.idx, this.curPlacingIdx)
+    if( itemRef.props.idx == 0){
+      this.curPlacingIdx = 0
+      this._resetVisibleRange()
+      this._resetColHeight()
+    }
     //轮到当前组件做渲染。
     if( itemRef.props.idx == this.curPlacingIdx ){
       placementJob(itemRef);
@@ -204,17 +205,14 @@ export default class Waterfall extends Component{
   _refScrollView = (ref)=>{ this.scrollView = ref; }
   _refContainer = (ref)=>{ this.container = ref; }
   _controlItemVisibility = (contentOffsetY)=>{
-
     var expansionOfScope = this.props.expansionOfScope || 0;
     var top = contentOffsetY - expansionOfScope;
     var bottom = contentOffsetY + this.height + expansionOfScope;
     var { start, end } = this.visibleRange;
-
     if(this.lastContentOffset === undefined){
       for(var i = 0; i < this.itemRefs.length; ++i){
         var itemView = this.itemRefs[i];
         if( !itemView ){
-          console.log(i)
           continue
         }
         if( top > itemView.getFoot() ){
@@ -235,7 +233,6 @@ export default class Waterfall extends Component{
       for(var i = start; i<this.itemRefs.length; ++i){
         var itemView = this.itemRefs[i];
         if( !itemView ){
-          console.log(i)
           continue
         }if( top > itemView.getFoot() ){
           itemView.hideIt();
@@ -247,7 +244,6 @@ export default class Waterfall extends Component{
       for(var i=end; i < this.itemRefs.length; ++i){
         var itemView = this.itemRefs[i];
         if( !itemView ){
-          console.log(i)
           continue
         }if( bottom > itemView.getTop() ){
           itemView.showIt();
@@ -262,7 +258,6 @@ export default class Waterfall extends Component{
       for(var i=start; i>=0; --i){
         var itemView = this.itemRefs[i];
         if( !itemView ){
-          console.log(i)
           continue
         }if( top < itemView.getFoot() ){
           itemView.showIt();
@@ -274,7 +269,6 @@ export default class Waterfall extends Component{
       for(var i=end; i>=0; --i){
         var itemView = this.itemRefs[i];
         if( !itemView ){
-          console.log(i)
           continue
         }if( bottom < itemView.getTop()  ){
           itemView.hideIt();
