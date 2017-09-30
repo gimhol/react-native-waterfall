@@ -9,7 +9,8 @@ var styles = StyleSheet.create({
   },
   container: {
     alignSelf:'stretch'
-  }
+  },
+  header:{ }
 })
 
 export default class Waterfall extends Component{
@@ -27,6 +28,8 @@ export default class Waterfall extends Component{
     this.visibleRange = { start: 0, end: 0 };
     this.curPlacingIdx = 0;
     this.placing = this.list.length > 0;
+    this.headerHeight = 0;
+    this.headerWidth = 0;
   }
 
   componentWillReceiveProps(nextProps){
@@ -104,11 +107,11 @@ export default class Waterfall extends Component{
   }
   _getMaxHeight(){
     var maxCol = this._getMaxCol();
-    return this.colHeights[maxCol];
+    return this.headerHeight + this.colHeights[maxCol];
   }
   _getMinHeight(){
     var minCol = this._getMinCol();
-    return this.colHeights[minCol];
+    return this.headerHeight + this.colHeights[minCol];
   }
   _getMaxCol(){
     var numberOfColumns = 0;
@@ -161,9 +164,9 @@ export default class Waterfall extends Component{
   placeItem(itemRef){
     var placementJob = (itemRef)=>{
       var minCol = this._getMinCol();
-      var top = minCol*this._getItemWidth();
-      var left = this.colHeights[minCol];
-      itemRef.setPosition(top,left);
+      var left   = minCol*this._getItemWidth();
+      var top    = this._getMinHeight();
+      itemRef.setPosition(left,top);
       itemRef.showUp();
       this.colHeights[minCol] += itemRef.height;
       //重新设置内部容器高度
@@ -202,8 +205,15 @@ export default class Waterfall extends Component{
     this.width = width
     this.height = height
   }
+  _onHeaderLayout = (e)=>{
+    this.props.onHeaderLayout && this.props.onHeaderLayout(e)
+    var { width, height } = e.nativeEvent.layout
+    this.headerWidth = width
+    this.headerHeight = height
+  }
   _refScrollView = (ref)=>{ this.scrollView = ref; }
   _refContainer = (ref)=>{ this.container = ref; }
+  _refHeader = (ref)=> { this.header = ref; }
   _controlItemVisibility = (contentOffsetY)=>{
     var expansionOfScope = this.props.expansionOfScope || 0;
     var top = contentOffsetY - expansionOfScope;
@@ -299,10 +309,18 @@ export default class Waterfall extends Component{
       this.isHandlingOnEndReached = false;
     }
   }
+  _renderHeader = ()=>{
+    return (
+      <View style={styles.header} ref={this._refHeader} onLayout={this._onHeaderLayout}>
+        { this.props.renderHeader && this.props.renderHeader() }
+      </View>
+    )
+  }
   render(){
     return (
       <ScrollView {...this.props} ref={this._refScrollView} style={[styles.root,this.props.style]} onLayout={this._onRootLayout} onScroll={this._onScroll}>
         <View style={styles.container} ref={this._refContainer} >
+        { this._renderHeader() }
         { this.width && this._renderItems() }
         </View>
       </ScrollView>

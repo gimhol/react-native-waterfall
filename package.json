@@ -1,6 +1,6 @@
 {
   "name": "react-native-waterfall",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "a waterfall plugin",
   "main": "index.js",
   "scripts": {
