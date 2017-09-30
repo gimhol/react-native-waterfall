@@ -1,5 +1,5 @@
 # react-native-waterfall
-a waterfall plugin
+a waterfall plugin.
 
 ## At present,  you should pay attention to the following points.
 - The height of the item must be confirmed in the first rendering, and should be immutable.
