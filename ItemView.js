@@ -19,8 +19,6 @@ export default class WaterfallItemView extends Component{
       this.rtime = (this.rtime+1)%2;
       this.forceUpdate();
     }
-
-    //this.setOpacity(0)
   }
   componentDidMount(){}
   componentDidUpdate(){}
@@ -43,6 +41,7 @@ export default class WaterfallItemView extends Component{
       this.state.opacity,{
         toValue:1,
         useNativeDriver: true,
+        duration: 250
       }).start()
   }
   _renderContent(){
