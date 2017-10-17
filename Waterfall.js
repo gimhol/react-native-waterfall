@@ -221,6 +221,9 @@ export default class Waterfall extends Component{
   _onRootLayout = (e)=>{
     this.props.onLayout && this.props.onLayout(e);
     var { width, height } = e.nativeEvent.layout;
+    if( width != this.width){
+      this.forceUpdate()
+    }
     this.width = width;
     this.height = height;
   }
