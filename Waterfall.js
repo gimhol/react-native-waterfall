@@ -168,8 +168,22 @@ export default class Waterfall extends Component{
     this.itemRefs[idx] = ref;
   }
 
+  placementJobs = {}
+
   placeItem(itemRef){
+    if( !itemRef ){
+      return
+    }
     var placementJob = (itemRef)=>{
+      if( !itemRef ){
+        return
+      }
+      if( itemRef.props.idx == 0){
+        this.curPlacingIdx = 0;
+        this._resetVisibleRange();
+        this._resetColHeight();
+      }
+      console.log('placementJob_go_'+itemRef.props.idx)
       var minCol = this._getMinCol();
       var left   = minCol*this._getItemWidth();
 
@@ -201,21 +215,16 @@ export default class Waterfall extends Component{
         this.jobAfterPlacing = null;
       }
     }
-    if( itemRef.props.idx == 0){
-      this.curPlacingIdx = 0;
-      this._resetVisibleRange();
-      this._resetColHeight();
-    }
-    //轮到当前组件做渲染。
-    if( itemRef.props.idx == this.curPlacingIdx ){
-      placementJob(itemRef);
-    }
-    //前面还有item重新放置，需要等待。
-    else if(itemRef.props.idx > this.curPlacingIdx){
 
-    }
-    else if(itemRef.props.idx < this.curPlacingIdx){
+    var idx = itemRef.props.idx
+    console.log('placementJob_add_'+itemRef.props.idx)
+    this.placementJobs[idx] = ()=>placementJob(itemRef)
 
+    var currentJob = this.placementJobs[this.curPlacingIdx]
+    while( currentJob ){
+      delete this.placementJobs[this.curPlacingIdx]
+      currentJob();
+      currentJob = this.placementJobs[this.curPlacingIdx]
     }
   }
   _onRootLayout = (e)=>{
@@ -340,7 +349,7 @@ export default class Waterfall extends Component{
   }
   render(){
     return (
-      <ScrollView {...this.props} ref={this._refScrollView} style={[styles.root,this.props.style]} onLayout={this._onRootLayout} onScroll={this._onScroll}>
+      <ScrollView scrollEventThrottle={4} {...this.props} ref={this._refScrollView} style={[styles.root,this.props.style]} onLayout={this._onRootLayout} onScroll={this._onScroll}>
         <View style={styles.container} ref={this._refContainer} >
         { this._renderHeader() }
         { this.width && this._renderItems() }

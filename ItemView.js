@@ -49,7 +49,8 @@ export default class WaterfallItemView extends Component{
     return renderContent && renderContent(item,idx,this,parent);
   }
   setNativeProps(...args){
-    this.refs.root.setNativeProps(...args);
+    var { root } = this.refs
+    root && root.setNativeProps(...args);
   }
   _onLayout = (e)=>{
     var {item, idx, renderContent,parent} = this.props;
