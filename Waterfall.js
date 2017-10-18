@@ -174,16 +174,16 @@ export default class Waterfall extends Component{
     if( !itemRef ){
       return
     }
+    if( itemRef.props.idx == 0){
+      this.curPlacingIdx = 0;
+      this._resetVisibleRange();
+      this._resetColHeight();
+    }
     var placementJob = (itemRef)=>{
       if( !itemRef ){
         return
       }
-      if( itemRef.props.idx == 0){
-        this.curPlacingIdx = 0;
-        this._resetVisibleRange();
-        this._resetColHeight();
-      }
-      console.log('placementJob_go_'+itemRef.props.idx)
+
       var minCol = this._getMinCol();
       var left   = minCol*this._getItemWidth();
 
@@ -217,7 +217,6 @@ export default class Waterfall extends Component{
     }
 
     var idx = itemRef.props.idx
-    console.log('placementJob_add_'+itemRef.props.idx)
     this.placementJobs[idx] = ()=>placementJob(itemRef)
 
     var currentJob = this.placementJobs[this.curPlacingIdx]
