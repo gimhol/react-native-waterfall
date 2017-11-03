@@ -70,13 +70,13 @@ export default class Waterfall extends Component{
 
     }
   }
-  shouldComponentUpdate(nextProps){
-    var { data } = nextProps;
-    if( data !== this.props.data )
-      return true
-
-    return false
-  }
+  // shouldComponentUpdate(nextProps){
+  //   var { data } = nextProps;
+  //   if( data !== this.props.data )
+  //     return true
+  //
+  //   return false
+  // }
   componentDidUpdate(lastProps,lastState){
     //datas have been refresh and all items have been removed.
     //add items again.
