@@ -174,15 +174,16 @@ export default class Waterfall extends Component{
     if( !itemRef ){
       return
     }
+    if( itemRef.props.idx == 0){
+      this.curPlacingIdx = 0;
+      this._resetVisibleRange();
+      this._resetColHeight();
+    }
     var placementJob = (itemRef)=>{
       if( !itemRef ){
         return
       }
-      if( itemRef.props.idx == 0){
-        this.curPlacingIdx = 0;
-        this._resetVisibleRange();
-        this._resetColHeight();
-      }
+
       var minCol = this._getMinCol();
       var left   = minCol*this._getItemWidth();
 
@@ -201,6 +202,7 @@ export default class Waterfall extends Component{
       if( gap > 0 ){
         this.colHeights[minCol] += gap;
       }
+
       //重新设置内部容器高度
       this.container.setNativeProps({
         style:{
