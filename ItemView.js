@@ -6,7 +6,6 @@ export default class WaterfallItemView extends Component{
     this.hidden = false;
     this.height = 0;
     this.width = props.parent._getItemWidth();
-    this.rtime = 0;
     this.state = {
       opacity: new Animated.Value(0)
     }
@@ -15,8 +14,8 @@ export default class WaterfallItemView extends Component{
   componentWillMount(){}
   componentWillReceiveProps(nextProps){
     if(nextProps.item !== this.props.item){
-      this.state.opacity.setValue(0)
-      this.rtime = (this.rtime+1)%2;
+      this.setPosition(-1000, -1000);
+      this.state.opacity.setValue(0);
       this.forceUpdate();
     }
   }
@@ -57,7 +56,9 @@ export default class WaterfallItemView extends Component{
     this.props.onLayout && this.props.onLayout(e)
     this.width = e.nativeEvent.layout.width;
     this.height = e.nativeEvent.layout.height;
-    parent.placeItem(this);
+    if(e.nativeEvent.layout.x === -1000 && e.nativeEvent.layout.y === -1000){
+      parent.placeItem(this);
+    }
   }
   setPosition(left,top){
     this.setNativeProps({style:{position:'absolute', left, top}});
@@ -70,8 +71,6 @@ export default class WaterfallItemView extends Component{
     var style = [
       this.props.style,
       {
-        paddingBottom: this.rtime,
-
         opacity: this.state.opacity,
         transform: [
           {

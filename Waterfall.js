@@ -43,7 +43,7 @@ export default class Waterfall extends Component{
       //reset placement job, start with the first item.
       this.curPlacingIdx = 0;
       //reset the list to remove all items
-      this.list = [];
+      this.list = [...data];
       //reset items' reference
       this.itemRefs = [];
       //reset every columns' height
@@ -70,21 +70,7 @@ export default class Waterfall extends Component{
 
     }
   }
-  // shouldComponentUpdate(nextProps){
-  //   var { data } = nextProps;
-  //   if( data !== this.props.data )
-  //     return true
-  //
-  //   return false
-  // }
   componentDidUpdate(lastProps,lastState){
-    //datas have been refresh and all items have been removed.
-    //add items again.
-    if(this.list.length === 0 && this.props.data.length > 0){
-      this.list = [...this.props.data];
-      this.forceUpdate()
-      this._controlItemVisibility(0)
-    }
   }
   _resetVisibleRange(){
     this.visibleRange.start = 0;
@@ -152,6 +138,8 @@ export default class Waterfall extends Component{
     var initStyle = {
       position:'absolute',
       width: this._getItemWidth(),
+      left: -1000,
+      top:-1000,
     };
     return (
       <ItemView
@@ -174,15 +162,16 @@ export default class Waterfall extends Component{
     if( !itemRef ){
       return
     }
+    if( itemRef.props.idx == 0){
+      this.curPlacingIdx = 0;
+      this._resetVisibleRange();
+      this._resetColHeight();
+    }
     var placementJob = (itemRef)=>{
       if( !itemRef ){
         return
       }
-      if( itemRef.props.idx == 0){
-        this.curPlacingIdx = 0;
-        this._resetVisibleRange();
-        this._resetColHeight();
-      }
+
       var minCol = this._getMinCol();
       var left   = minCol*this._getItemWidth();
 
