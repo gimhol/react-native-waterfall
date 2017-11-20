@@ -190,6 +190,7 @@ export default class Waterfall extends Component{
       if( gap > 0 ){
         this.colHeights[minCol] += gap;
       }
+
       //重新设置内部容器高度
       this.container.setNativeProps({
         style:{
