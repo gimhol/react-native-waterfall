@@ -22,6 +22,106 @@ npm install react-native-waterfall --save
     onEndReached          ={ this.loadMore }
     renderItem            ={ this.renderItem }
 ```
+## Example
+
+```jsx
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  RefreshControl
+} from 'react-native';
+
+import Waterfall from 'react-native-waterfall'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'stretch',
+    backgroundColor: '#F5FC00',
+  },
+  waterfall:{
+    flex:1,
+    backgroundColor:'red'
+  }
+});
+
+export default class App extends Component {
+  state = {
+    isRefreshing: false,
+    isLoadingMore: false
+  }
+  componentWillMount(){
+    this.data = []
+    this.loadMore()
+  }
+
+  addMoreDatas(){
+    for(var i=0;i<50;++i){
+      this.data.push({
+        height: 50+Math.floor(Math.random()*200)
+      })
+    }
+  }
+
+  refresh = ()=>{
+    if(this.state.isRefreshing || this.state.isLoadingMore){
+      return;
+    }
+    this.setState({isRefreshing: true})
+    setTimeout(()=>{
+      this.data = [];
+      this.addMoreDatas();
+      this.setState({isRefreshing: false})
+    },500)
+  }
+
+  loadMore = ()=>{
+    if(this.state.isRefreshing || this.state.isLoadingMore){
+      return;
+    }
+    this.setState({isLoadingMore: true})
+    setTimeout(()=>{
+      this.addMoreDatas();
+      this.setState({isLoadingMore: false})
+    },500)
+  }
+
+  renderItem = (itemData,itemIdx,itemContainer)=>{
+    return (
+      <TouchableOpacity style={{backgroundColor:'black',width:itemContainer.width,height:itemData.height}}>
+        <Text style={{color:'white'}}>index: {itemIdx}</Text>
+        <Text style={{color:'white'}}>height:{itemData.height}</Text>
+      </TouchableOpacity>
+    )
+  }
+  
+  render() {
+    return (
+      <View style={styles.container}>
+        <Waterfall
+          style={styles.waterfall}
+          data={this.data}
+          gap={6}
+          numberOfColumns={2}
+          expansionOfScope={100}
+          onEndReachedThreshold={1000}
+          onEndReached={this.loadMore}
+          renderItem={this.renderItem}
+          refreshControl={
+            <RefreshControl
+              refreshing = {this.state.isRefreshing}
+              onRefresh = {this.refresh}
+            />
+          }/>
+      </View>
+    );
+  }
+}
+
+```
 
 ## Props
 		
